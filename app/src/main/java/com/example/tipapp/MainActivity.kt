@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -62,23 +63,6 @@ fun MainPage() {
 @ExperimentalComposeUiApi
 @Composable
 private fun MainContent() {
-
-    BillForm {
-
-    }
-}
-
-@ExperimentalComposeUiApi
-@Composable
-private fun BillForm(onValChange: (String) -> Unit = {}) {
-    val totalBillState = remember {
-        mutableStateOf("")
-    }
-
-    val validState = remember(totalBillState.value) {
-        totalBillState.value.trim().isNotEmpty()
-    }
-
     val splitValueState = remember {
         mutableStateOf(1)
     }
@@ -92,6 +76,31 @@ private fun BillForm(onValChange: (String) -> Unit = {}) {
     }
 
     val range = IntRange(start = 1, endInclusive = 100)
+    BillForm(
+        range = range,
+        splitValueState = splitValueState,
+        tipAmountState = tipAmountState,
+        totalPerPersonState = totalPerPersonState
+    ) {}
+}
+
+@ExperimentalComposeUiApi
+@Composable
+private fun BillForm(
+    range: IntRange = 1..100,
+    splitValueState: MutableState<Int>,
+    tipAmountState: MutableState<Double>,
+    totalPerPersonState: MutableState<Double>,
+    onValChange: (String) -> Unit = {}
+) {
+    val totalBillState = remember {
+        mutableStateOf("")
+    }
+
+    val validState = remember(totalBillState.value) {
+        totalBillState.value.trim().isNotEmpty()
+    }
+
     val sliderPositionChange = remember {
         mutableStateOf(0f)
     }
